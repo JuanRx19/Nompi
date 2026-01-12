@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "binary"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum DeliveryStatus {
+  PENDING
+  SHIPPED
+  DELIVERED
+  RETURNED
+}
+
+enum TransactionStatus {
+  PAID
+  FAILED
+}
+
+model Customer {
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  document     String        @unique
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  transactions Transaction[]
+
+  @@map("Customer")
+}
+
+model Product {
+  id           String        @id @default(uuid())
+  name         String
+  description  String
+  price        Decimal       @db.Decimal(10, 2)
+  stock        Int
+  imageUrl     String        @default("")
+  deleted      Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  transactions Transaction[]
+
+  @@map("Product")
+}
+
+model Transaction {
+  id          String            @id @default(uuid())
+  idProduct   String
+  idCustomer  String
+  amount      Decimal           @db.Decimal(10, 2)
+  baseFee     Decimal           @db.Decimal(10, 2)
+  deliveryFee Decimal           @db.Decimal(10, 2)
+  totalAmount Decimal           @db.Decimal(10, 2)
+  status      TransactionStatus
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  product  Product   @relation(fields: [idProduct], references: [id])
+  customer Customer  @relation(fields: [idCustomer], references: [id])
+  delivery Delivery?
+
+  @@map("Transaction")
+}
+
+model Delivery {
+  id            String         @id @default(uuid())
+  idTransaction String         @unique
+  address       String
+  city          String
+  phone         String
+  status        DeliveryStatus
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  transaction Transaction @relation(fields: [idTransaction], references: [id])
+
+  @@map("Delivery")
+}
