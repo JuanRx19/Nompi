@@ -1,6 +1,7 @@
 import type { Payment } from '../../types/payment.types';
 import type { Product } from '../../types/product.types';
 import { apiPost, apiGet } from '../api';
+import { getEnv } from '../env';
 
 type NompiTransaction = {
   status?: string;
@@ -12,14 +13,20 @@ type SimulatePaymentResponse = {
 };
 
 const getAppBaseUrl = (): string => {
-  const envUrl = import.meta.env.VITE_FRONT_BASE_URL as string | undefined;
+  const envUrl = getEnv('VITE_FRONT_BASE_URL');
   return envUrl ?? window.location.origin;
 };
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL as string | undefined;
+const API_BASE_URL = getEnv('VITE_API_BASE_URL');
+
+const requireEnv = (name: string, value: string | undefined): string => {
+  if (!value) throw new Error(`Falta configurar ${name} en el .env`);
+  return value;
+};
 
 export const nompiService = {
   async createPaymentLink(product: Product): Promise<Payment> {
+    const baseUrl = requireEnv('VITE_API_BASE_URL', API_BASE_URL);
 
     const payload = {
       amount_in_cents: product.price * 100,
@@ -33,7 +40,7 @@ export const nompiService = {
     };
 
     const response = await apiPost<Payment>(
-      `${API_BASE_URL}/payments`,
+      `${baseUrl}/payments`,
       payload,
     );
 
@@ -41,10 +48,10 @@ export const nompiService = {
   },
 
   async validateTransaction(id: string): Promise<'success' | 'failure'> {
+    const baseUrl = requireEnv('VITE_API_BASE_URL', API_BASE_URL);
     const response = await apiGet<NompiTransaction>(
-      `${API_BASE_URL}/payments/${id}`,
+      `${baseUrl}/payments/${id}`,
     );
-    console.log('Validation response data:', response);
     const status = response.status;
     return status === 'APPROVED' ? 'success' : 'failure';
   },
@@ -61,8 +68,9 @@ export const nompiService = {
     baseFee?: number;
     deliveryFee?: number;
   }): Promise<'success' | 'failure'> {
+    const baseUrl = requireEnv('VITE_API_BASE_URL', API_BASE_URL);
     const response = await apiPost<SimulatePaymentResponse>(
-      `${API_BASE_URL}/payments/simulate`,
+      `${baseUrl}/payments/simulate`,
       payload,
     );
 

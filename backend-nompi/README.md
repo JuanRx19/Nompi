@@ -57,6 +57,17 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Unit tests & coverage (Jest)
+
+Resultados obtenidos el **2026-01-13** ejecutando `npm run test:cov -- --runInBand`:
+
+- Statements: **97.18%**
+- Branches: **81.15%**
+- Functions: **91.25%**
+- Lines: **96.85%**
+
+El umbral mínimo de coverage requerido (global) está configurado en **80%**.
+
 ## Deployment
 
 When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.

@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from '../app/store';
 import {
   clearPersistedCheckoutState,
   resetCheckout,
-  setStep,
 } from '../features/checkout/checkoutSlice';
 import { nompiService } from '../api/services/nompi.service';
 
