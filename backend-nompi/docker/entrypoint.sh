@@ -12,4 +12,4 @@ export PGPASSWORD=1234
 psql -h postgres -U postgres -d nompi_db -f /backend-nompi/prisma/init-scripts/init-products.sql || true
 
 echo "🏁 Iniciando aplicación Nest..."
-npm run start:dev
+npm run start:prod
