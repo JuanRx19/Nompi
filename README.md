@@ -83,7 +83,7 @@ El backend permite configurar orígenes CORS con `CORS_ORIGINS`.
 Ejemplo para permitir el frontend desplegado:
 
 ```env
-CORS_ORIGINS="https://nompi-git-main-juanrx19s-projects.vercel.app"
+CORS_ORIGINS="https://nompi.vercel.app/"
 ```
 
 ## Asistencia con IA
