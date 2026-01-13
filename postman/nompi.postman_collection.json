@@ -1,0 +1,163 @@
+{
+  "info": {
+    "name": "Nompi API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "API_BASE_URL",
+      "value": "http://localhost:3000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "List products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{API_BASE_URL}}/products",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["products"]
+            }
+          }
+        },
+        {
+          "name": "Get product by id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{API_BASE_URL}}/products/:id",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["products", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "REPLACE_WITH_PRODUCT_ID"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "Create customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Juan Perez\",\n  \"email\": \"juan.perez@example.com\",\n  \"document\": \"123456789\"\n}"
+            },
+            "url": {
+              "raw": "{{API_BASE_URL}}/customers",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["customers"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Transactions",
+      "item": [
+        {
+          "name": "Create transaction",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idProduct\": \"REPLACE_WITH_PRODUCT_ID\",\n  \"idCustomer\": \"REPLACE_WITH_CUSTOMER_ID\",\n  \"amount\": 10000,\n  \"baseFee\": 500,\n  \"deliveryFee\": 1000,\n  \"totalAmount\": 11500,\n  \"status\": \"PAID\",\n  \"idNompiTransaction\": \"EXTERNAL_TX_ID\"\n}"
+            },
+            "url": {
+              "raw": "{{API_BASE_URL}}/transactions",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["transactions"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Create payment link (checkout)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Producto demo\",\n  \"description\": \"Pago de producto\",\n  \"single_use\": 1,\n  \"currency\": \"COP\",\n  \"amount_in_cents\": 1150000,\n  \"redirect_url\": \"http://localhost:5173\",\n  \"sku\": \"REPLACE_WITH_PRODUCT_ID\"\n}"
+            },
+            "url": {
+              "raw": "{{API_BASE_URL}}/payments",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["payments"]
+            }
+          }
+        },
+        {
+          "name": "Get payment status",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{API_BASE_URL}}/payments/:id",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["payments", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "REPLACE_WITH_TRANSACTION_ID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Simulate payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productSku\": \"REPLACE_WITH_PRODUCT_ID\",\n  \"cardNumber\": \"4242 4242 4242 4242\",\n  \"customerName\": \"Juan Perez\",\n  \"customerEmail\": \"juan.perez@example.com\",\n  \"customerDocument\": \"123456789\",\n  \"address\": \"Calle 123 #45-67\",\n  \"city\": \"Bogota\",\n  \"phone\": \"3001234567\",\n  \"baseFee\": 500,\n  \"deliveryFee\": 1000\n}"
+            },
+            "url": {
+              "raw": "{{API_BASE_URL}}/payments/simulate",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["payments", "simulate"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
