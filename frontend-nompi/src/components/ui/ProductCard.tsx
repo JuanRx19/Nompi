@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Product } from '../../types/product.types';
 import { nompiService } from '../../api/services/nompi.service';
+import { redirectTo } from '../../utils/browser';
 
 interface ProductCardProps {
   product: Product;
@@ -18,7 +19,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     
     try {
       const { redirect_url } = await nompiService.createPaymentLink(product);
-      window.location.assign(redirect_url);
+      redirectTo(redirect_url);
     }
     catch (error) {
       console.error('Error creating payment link:', error);

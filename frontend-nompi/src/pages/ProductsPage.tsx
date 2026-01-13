@@ -4,6 +4,7 @@ import type { Product } from '../types/product.types';
 import PaymentModal from '../components/PaymentModal';
 import SummaryBackdrop from '../components/SummaryBackdrop';
 import { productsService } from '../api/services/products.service';
+import { reloadPage } from '../utils/browser';
 
 export const ProductsPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -74,7 +75,7 @@ export const ProductsPage = () => {
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Error</h2>
           <p className="text-gray-600 mb-4">{error}</p>
           <button
-            onClick={() => window.location.reload()}
+            onClick={reloadPage}
             className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700"
           >
             Intentar de nuevo

@@ -1,22 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Delivery } from '../../../../domain/models/delivery';
-import type { DeliveryStatus } from '../../../../domain/enums/deliveryStatusEnum';
 import type { DeliveryRepository } from '../../../../domain/ports/repositories/delivery.repository';
 import { PrismaService } from '../prisma/prisma.service';
-
-type PrismaDeliveryStatus = DeliveryStatus;
+import { DeliveryMapper } from '../../mappers/delivery.mapper';
 
 @Injectable()
 export class PrismaDeliveryRepository implements DeliveryRepository {
   constructor(private readonly prisma: PrismaService) {}
-
-  private toDomainStatus(status: PrismaDeliveryStatus): DeliveryStatus {
-    return status;
-  }
-
-  private toPrismaStatus(status: DeliveryStatus): PrismaDeliveryStatus {
-    return status;
-  }
 
   async findById(id: string): Promise<Delivery | null> {
     const row = await this.prisma.delivery.findUnique({ where: { id } });
@@ -28,7 +18,7 @@ export class PrismaDeliveryRepository implements DeliveryRepository {
       row.address,
       row.city,
       row.phone,
-      this.toDomainStatus(row.status),
+      DeliveryMapper.toDomainStatus(row.status),
     );
   }
 
@@ -44,7 +34,7 @@ export class PrismaDeliveryRepository implements DeliveryRepository {
       row.address,
       row.city,
       row.phone,
-      this.toDomainStatus(row.status),
+      DeliveryMapper.toDomainStatus(row.status),
     );
   }
 
@@ -55,7 +45,7 @@ export class PrismaDeliveryRepository implements DeliveryRepository {
         address: delivery.address,
         city: delivery.city,
         phone: delivery.phone,
-        status: this.toPrismaStatus(delivery.status),
+        status: DeliveryMapper.toPrismaStatus(delivery.status),
       },
       create: {
         id: delivery.id,
@@ -63,7 +53,7 @@ export class PrismaDeliveryRepository implements DeliveryRepository {
         address: delivery.address,
         city: delivery.city,
         phone: delivery.phone,
-        status: this.toPrismaStatus(delivery.status),
+        status: DeliveryMapper.toPrismaStatus(delivery.status),
       },
     });
   }
