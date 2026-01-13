@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/store';
 import {
-  persistCheckoutState,
+  clearPersistedCheckoutState,
   resetCheckout,
   setStep,
 } from '../features/checkout/checkoutSlice';
@@ -38,7 +38,8 @@ export const SummaryBackdrop: React.FC = () => {
   };
 
   const handleClose = () => {
-    dispatch(setStep(0));
+    dispatch(resetCheckout());
+    clearPersistedCheckoutState();
   };
 
   const handlePay = () => {
@@ -63,12 +64,7 @@ export const SummaryBackdrop: React.FC = () => {
         });
 
         dispatch(resetCheckout());
-        persistCheckoutState({
-          selectedProduct: null,
-          cardInfo: null,
-          deliveryInfo: null,
-          step: 0,
-        });
+        clearPersistedCheckoutState();
 
         navigate(result === 'success' ? '/checkout/success' : '/checkout/failure');
       } catch (e) {
