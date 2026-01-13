@@ -48,7 +48,7 @@ Por defecto el backend permite origen `http://localhost:5173` (Vite dev server).
 Para producción, configura una lista de orígenes permitidos con:
 
 ```env
-CORS_ORIGINS="https://tu-frontend.com,https://tu-preview.com"
+CORS_ORIGINS="https://nompi.vercel.app/"
 ```
 
 ## Ejecutar (local)
