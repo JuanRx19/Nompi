@@ -3,6 +3,8 @@ import type { Product } from '../types/product.types';
 import Input from './ui/Input';
 import { useAppDispatch, useAppSelector } from '../app/store';
 import {
+  clearPersistedCheckoutState,
+  resetCheckout,
   setCardInfo,
   setDeliveryInfo,
   setSelectedProduct,
@@ -64,6 +66,12 @@ const PaymentModalContent: React.FC<PaymentModalContentProps> = ({
   onClose,
 }) => {
   const dispatch = useAppDispatch();
+
+  const handleCancel = () => {
+    dispatch(resetCheckout());
+    clearPersistedCheckoutState();
+    onClose();
+  };
 
   const [cardNumber, setCardNumber] = useState(() =>
     formatCardNumber(checkout.cardInfo?.cardNumber ?? ''),
@@ -220,7 +228,7 @@ const PaymentModalContent: React.FC<PaymentModalContentProps> = ({
           </div>
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleCancel}
             className="text-gray-400 hover:text-gray-600"
           >
             ✕
@@ -363,7 +371,7 @@ const PaymentModalContent: React.FC<PaymentModalContentProps> = ({
         <div className="flex justify-end gap-3 pt-2">
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleCancel}
             className="px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
             Cancelar
