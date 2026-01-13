@@ -13,6 +13,12 @@ La solución está separada en dos proyectos independientes para facilitar:
 - [backend-nompi/](backend-nompi/README.md): API NestJS + Prisma + Postgres.
 - [frontend-nompi/](frontend-nompi/README.md): SPA Vite + React + Redux.
 
+## Git flow
+
+En este repositorio también trate de tener un añadido utilizando git flow para simular un flujo de trabajo real, creando los pull request para simularlos.
+
+![Git flow](https://media2.dev.to/dynamic/image/width=1600,height=900,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fsqxc7kepfadqqkg6sgdn.png)
+
 ## Flujo de negocio (5 pasos)
 
 1. **Product page**: ver producto y unidades disponibles.
