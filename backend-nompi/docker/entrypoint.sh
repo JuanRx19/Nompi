@@ -1,9 +1,6 @@
 #!/usr/bin/env sh
 set -e
 
-echo "� Generando cliente de Prisma..."
-npx prisma generate
-
 echo "�🚀 Aplicando migraciones..."
 npx prisma migrate deploy
 
