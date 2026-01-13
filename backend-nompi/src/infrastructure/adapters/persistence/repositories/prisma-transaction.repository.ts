@@ -1,18 +1,17 @@
 import { Injectable } from '@nestjs/common';
+import { TransactionStatus as PrismaTransactionStatus } from '@prisma/client';
 import { Transaction } from '../../../../domain/models/transaction';
 import { TransactionStatus as DomainTransactionStatus } from '../../../../domain/enums/transactionStatusEnum';
 import type { TransactionRepository } from '../../../../domain/ports/repositories/transaction.repository';
 import { PrismaService } from '../prisma/prisma.service';
 
-type PrismaTransactionStatus = 'PAID' | 'FAILED' | (string & {});
-
 const toDomainStatus = (
   status: PrismaTransactionStatus,
 ): DomainTransactionStatus => {
   switch (status) {
-    case 'PAID':
+    case PrismaTransactionStatus.PAID:
       return DomainTransactionStatus.PAID;
-    case 'FAILED':
+    case PrismaTransactionStatus.FAILED:
       return DomainTransactionStatus.FAILED;
     default:
       return DomainTransactionStatus.FAILED;
@@ -21,7 +20,16 @@ const toDomainStatus = (
 
 const toPrismaStatus = (
   status: DomainTransactionStatus,
-): PrismaTransactionStatus => status;
+): PrismaTransactionStatus => {
+  switch (status) {
+    case DomainTransactionStatus.PAID:
+      return PrismaTransactionStatus.PAID;
+    case DomainTransactionStatus.FAILED:
+      return PrismaTransactionStatus.FAILED;
+    default:
+      return PrismaTransactionStatus.FAILED;
+  }
+};
 
 @Injectable()
 export class PrismaTransactionRepository implements TransactionRepository {
