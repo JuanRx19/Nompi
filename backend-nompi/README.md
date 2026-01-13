@@ -83,7 +83,7 @@ El modelo de datos principal se compone de cuatro entidades:
 
 Diagrama (ERD):
 
-![Modelo de datos](./modelo-datos.png)
+![Modelo de datos]([./modelo-datos.png](https://github.com/JuanRx19/Nompi/blob/main/backend-nompi/modelo_bd.png))
 
 ## Prisma (migraciones)
 
