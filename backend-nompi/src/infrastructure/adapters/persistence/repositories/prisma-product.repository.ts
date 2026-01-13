@@ -82,4 +82,20 @@ export class ProductRepository implements IProductRepository {
       },
     });
   }
+
+  async decrementStock(productId: string, quantity: number): Promise<boolean> {
+    if (quantity <= 0) return true;
+
+    const result = await this.prisma.product.updateMany({
+      where: {
+        id: productId,
+        stock: { gte: quantity },
+      },
+      data: {
+        stock: { decrement: quantity },
+      },
+    });
+
+    return result.count > 0;
+  }
 }

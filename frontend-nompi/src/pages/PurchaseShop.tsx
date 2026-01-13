@@ -17,7 +17,6 @@ export const PurchaseShop: React.FC = () => {
         navigate('/checkout/failure', { replace: true });
         return;
       }
-
       const result = await nompiService.validateTransaction(transactionId);
       navigate(result === 'success' ? '/checkout/success' : '/checkout/failure', {
         replace: true,

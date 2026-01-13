@@ -22,6 +22,10 @@ export class CreateTransactionDto {
   @IsNotEmpty()
   deliveryFee!: number;
 
+  @IsString()
+  @IsNotEmpty()
+  idNompiTransaction!: string;
+
   @IsNumber()
   @IsNotEmpty()
   totalAmount!: number;
@@ -55,6 +59,10 @@ export class TransactionDto {
   @IsNumber()
   @IsNotEmpty()
   deliveryFee!: number;
+
+  @IsString()
+  @IsNotEmpty()
+  idNompiTransaction!: string;
 
   @IsNumber()
   @IsNotEmpty()

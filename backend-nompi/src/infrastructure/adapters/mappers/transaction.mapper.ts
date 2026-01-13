@@ -15,6 +15,7 @@ export class TransactionMapper {
       dto.deliveryFee,
       dto.totalAmount,
       dto.status,
+      dto.idNompiTransaction,
     );
   }
 
@@ -28,6 +29,7 @@ export class TransactionMapper {
     dto.deliveryFee = transaction.deliveryFee;
     dto.totalAmount = transaction.totalAmount;
     dto.status = transaction.status;
+    dto.idNompiTransaction = transaction.idNompiTransaction;
     return dto;
   }
 }

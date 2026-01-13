@@ -10,5 +10,6 @@ export class Transaction {
     public readonly deliveryFee: number,
     public readonly totalAmount: number,
     public readonly status: TransactionStatus,
+    public readonly idNompiTransaction: string,
   ) {}
 }

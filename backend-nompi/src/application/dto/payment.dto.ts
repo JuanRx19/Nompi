@@ -34,4 +34,18 @@ export class PaymentDto {
   @IsBoolean()
   @IsOptional()
   redirect_url?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  status?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  sku?: string;
 }
+
+export type MerchantInfo = {
+  name: string;
+  email: string;
+  legal_id: string;
+};

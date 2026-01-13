@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/store';
 import {
@@ -6,18 +6,28 @@ import {
   resetCheckout,
   setStep,
 } from '../features/checkout/checkoutSlice';
+import { nompiService } from '../api/services/nompi.service';
 
 const DELIVERY_FEE = 5000;
+
+const baseFee = 2000;
 
 export const SummaryBackdrop: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { selectedProduct, step } = useAppSelector((state) => state.checkout);
+  const { selectedProduct, step, cardInfo, deliveryInfo } = useAppSelector(
+    (state) => state.checkout,
+  );
+
+  const [isPaying, setIsPaying] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   if (step !== 3 || !selectedProduct) return null;
 
-  const baseFee = selectedProduct.price;
-  const total = baseFee + DELIVERY_FEE;
+  const amount = selectedProduct.price;
+  const total = amount + baseFee + DELIVERY_FEE;
+
+  const canPay = Boolean(selectedProduct && cardInfo && deliveryInfo) && !isPaying;
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('es-CO', {
@@ -32,20 +42,43 @@ export const SummaryBackdrop: React.FC = () => {
   };
 
   const handlePay = () => {
-    // Aquí luego se integrará el pago real (Paso 4)
-    console.log('Pagar producto', selectedProduct.id);
-    dispatch(resetCheckout());
+    const run = async () => {
+      if (!selectedProduct || !cardInfo || !deliveryInfo) return;
 
-    persistCheckoutState({
-      selectedProduct: null,
-      cardInfo: null,
-      deliveryInfo: null,
-      step: 0,
-    });
+      setIsPaying(true);
+      setError(null);
 
-    // Por ahora simulamos éxito. Cuando se integre el pago real,
-    // redirige a /checkout/failure si falla.
-    navigate('/checkout/success');
+      try {
+        const result = await nompiService.simulatePayment({
+          productSku: selectedProduct.id,
+          cardNumber: cardInfo.cardNumber,
+          customerName: deliveryInfo.name,
+          customerEmail: deliveryInfo.email,
+          customerDocument: String(deliveryInfo.document),
+          address: deliveryInfo.address,
+          city: deliveryInfo.city,
+          phone: deliveryInfo.phone,
+          baseFee,
+          deliveryFee: DELIVERY_FEE,
+        });
+
+        dispatch(resetCheckout());
+        persistCheckoutState({
+          selectedProduct: null,
+          cardInfo: null,
+          deliveryInfo: null,
+          step: 0,
+        });
+
+        navigate(result === 'success' ? '/checkout/success' : '/checkout/failure');
+      } catch (e) {
+        setError(e instanceof Error ? e.message : 'Error procesando el pago');
+      } finally {
+        setIsPaying(false);
+      }
+    };
+
+    run();
   };
 
   return (
@@ -74,6 +107,13 @@ export const SummaryBackdrop: React.FC = () => {
           </div>
 
           <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-600">Amount fee</span>
+            <span className="text-sm font-medium text-gray-900">
+              {formatPrice(amount)}
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between">
             <span className="text-sm text-gray-600">Base fee</span>
             <span className="text-sm font-medium text-gray-900">
               {formatPrice(baseFee)}
@@ -98,10 +138,18 @@ export const SummaryBackdrop: React.FC = () => {
         <button
           type="button"
           onClick={handlePay}
-          className="w-full mt-2 px-5 py-3 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 shadow-sm"
+          disabled={!canPay}
+          className={
+            "w-full mt-2 px-5 py-3 rounded-xl text-white text-sm font-semibold shadow-sm " +
+            (canPay ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-300 cursor-not-allowed')
+          }
         >
-          Pagar
+          {isPaying ? 'Procesando…' : 'Pagar'}
         </button>
+
+        {error ? (
+          <p className="text-sm text-red-600">{error}</p>
+        ) : null}
       </div>
     </div>
   );

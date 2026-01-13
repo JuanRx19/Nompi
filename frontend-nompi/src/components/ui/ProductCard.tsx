@@ -17,12 +17,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const handlePaymentLink = async () => {
     
     try {
-      const productForPayment = {
-        ...product,
-        price: product.price * 100,
-      };
-      
-      const { redirect_url } = await nompiService.createPaymentLink(productForPayment);
+      const { redirect_url } = await nompiService.createPaymentLink(product);
       window.location.assign(redirect_url);
     }
     catch (error) {

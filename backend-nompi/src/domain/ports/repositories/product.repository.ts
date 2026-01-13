@@ -7,4 +7,5 @@ export interface IProductRepository {
   findAll(): Promise<Product[]>;
   findActive(): Promise<Product[]>;
   save(product: Product): Promise<void>;
+  decrementStock(productId: string, quantity: number): Promise<boolean>;
 }
